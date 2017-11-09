@@ -1,13 +1,32 @@
+import os
 import tkinter
 from tkinter import *
 window = tkinter.Tk()
 
+def sendtopuredata(message=''):
+    os.system("echo '"+messgae+"' | pdsend3000")
+
+def setSpeed():
+    message = '1'+str(speedslider.get())+';'
+    sendtopuredata(message)
+    
+
+
 window.title("Phaser by Bradley Walker 1401579")
 
-def buttonpress():
-    print("Something")
+# print slider values, "Test", will be used to send values to pure data
+def speedval(speed):
+    print("Speed = ",speedslider.get())
+    setSpeed
 
-window.geometry("800x800")
+
+def depthval (depth):
+    print("Depth = ",depthslider.get())
+
+def feedbackval (feedback):
+    print ("Feedback = ",feedbackslider.get())
+
+window.geometry("800x480")
 Name = Label(window, text="PHASER", bg="black", fg="white", font=("Helvetica",16))
 Name.grid(row=0, columnspan=3)
 
@@ -25,15 +44,21 @@ Feedback = Label(window, text="Feedback", bg="black", fg="white", font=("Helveti
 Feedback.grid(row=1, column=2,padx=100)
 
 
-w = Scale(window, from_=3, to=0,resolution=0.1, length=700)
-w.grid(row=2, column=0)
+speedslider = Scale(window, from_=3, to=0,resolution=0.1, length=380, command=speedval)
+speedslider.grid(row=2, column=0)
 
 
-w2 = Scale(window, from_=3, to=0,resolution=0.1, length=700)
-w2.grid(row=2, column=1)
+depthslider = Scale(window, from_=3, to=0,resolution=0.1, length=380, command=depthval)
+depthslider.grid(row=2, column=1)
 
-w3 = Scale(window, from_=0.3, to=-0.3,resolution=0.01, length=700)
-w3.grid(row=2, column=2)
+feedbackslider = Scale(window, from_=0.3, to=-0.3,resolution=0.01, length=380, command=feedbackval)
+feedbackslider.grid(row=2, column=2)
 
 
 window.mainloop()
+
+
+   
+
+
+
