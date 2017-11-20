@@ -1,0 +1,228 @@
+import tkinter as tk               
+from tkinter import font  as tkfont 
+
+
+class SampleApp(tk.Tk):
+
+
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+
+        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.frames = {}
+        for F in (StartPage, Phaser, Reverb, Fuzz):
+            page_name = F.__name__
+            frame = F(parent=container, controller=self)
+            self.frames[page_name] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame("StartPage")
+
+    def show_frame(self, page_name):
+        '''Show a frame for the given page name'''
+        frame = self.frames[page_name]
+        frame.tkraise()
+
+
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        def phaseropen():
+            controller.show_frame("Phaser")
+            print("Phaser Open")
+            ## Open phaser Puredata program ##
+            
+
+        def reverbopen():
+            controller.show_frame("Reverb")
+            print("Reverb Open")
+            ## Open Reverb Pure data program ##
+
+        def fuzzopen():
+            controller.show_frame("Fuzz")
+            print("Fuzz Open")
+            ## Open Fuzz Puredata program ##
+
+            
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+
+        label = tk.Label(self, text="Multi Effects Unit", bg="black", fg="white", font=("Helvetica",16))
+        label.grid(row=0, columnspan=3)
+
+        phaserbutton = tk.Button(self, text="Phaser", font =("Helvetica",16),command=lambda: phaseropen())
+
+        fuzzbutton = tk.Button(self, text="Fuzz", font = ("Helvetica",16), command = lambda: fuzzopen())
+
+        reverbbutton = tk.Button(self, text="Reverb", font = ("Helvetica",16), command=lambda: reverbopen())
+        
+
+
+
+
+
+        phaserbutton.grid(row=1, column=0,padx=100)
+        fuzzbutton.grid(row=1, column=1,padx=100)
+        reverbbutton.grid(row=1, column=2,padx=100)
+
+
+
+class Phaser(tk.Frame):
+  
+
+    
+    def __init__(self, parent, controller):
+        def closewindow ():
+            controller.show_frame("StartPage")
+            
+            ## Close Phaser Puredata program ##
+
+            
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        button = tk.Button(self, text="Go to the Home page",command = lambda:closewindow())
+        button.grid(row=0,column=2)
+
+        def sendtopuredata(message=''):
+            os.system("echo '"+messgae+"' | pdsend3000")
+
+        def setSpeed():
+            message = '1'+str(speedslider.get())+';'
+            sendtopuredata(message)
+
+        # print slider values, "Test", will be used to send values to pure data
+        def speedval(speed):
+            print("Speed = ",speedslider.get())
+            setSpeed
+
+
+        def depthval (depth):
+            print("Depth = ",depthslider.get())
+
+        def feedbackval (feedback):
+            print ("Feedback = ",feedbackslider.get())
+
+            
+        label = tk.Label(self, text="PHASER", bg="black", fg="white", font=("Helvetica",16))
+        label.grid(row=0, columnspan=3)
+
+
+
+        Speed = tk.Label(self, text="Speed", bg="black", fg="white", font=("Helvetica",12))
+        Speed.grid(row=1,column=0, padx=100)
+
+
+        Depth = tk.Label(self, text="Depth", bg="black", fg="white", font=("Helvetica",12))
+        Depth.grid(row=1, column=1,padx=100)
+
+
+        Feedback = tk.Label(self, text="Feedback", bg="black", fg="white", font=("Helvetica",12))
+        Feedback.grid(row=1, column=2,padx=100)
+
+
+        speedslider = tk.Scale(self, from_=3, to=0,resolution=0.1, length=380, command=speedval,width = 30)
+        speedslider.grid(row=2, column=0)
+
+
+        depthslider = tk.Scale(self, from_=3, to=0,resolution=0.1, length=380, command=depthval, width = 30)
+        depthslider.grid(row=2, column=1)
+
+        feedbackslider = tk.Scale(self, from_=0.3, to=-0.3,resolution=0.01, length=380, command=feedbackval, width = 30)
+        feedbackslider.grid(row=2, column=2)
+        
+
+
+class Reverb(tk.Frame):
+
+    def __init__(self, parent, controller):
+        def closewindow ():
+            controller.show_frame("StartPage")
+            
+            ## Close Reverb Puredata program ##
+            
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        button = tk.Button(self, text="Go to the Home page",command = lambda:closewindow())
+        button.grid(row=0,column=2)
+
+        def roomsizeval(roomsize):
+            print("Roomsize = ",roomsizeslider.get())
+            
+
+
+        def dampingval (damping):
+            print("Damping = ",dampingslider.get())
+
+        def wetval (wet):
+            print ("Wet = ",wetslider.get())
+
+        def dryval(dry):
+            print ("Dry = ",dryslider.get())
+
+
+        Name = tk.Label(self, text="Reverb", bg="black", fg="white", font=("Helvetica",16))
+        Name.grid(row=0, columnspan=4)
+
+
+
+        Roomsize = tk.Label(self, text="Roomesize", bg="black", fg="white", font=("Helvetica",12))
+        Roomsize.grid(row=1,column=0, padx=75)
+
+
+        Damping = tk.Label(self, text="Damping", bg="black", fg="white", font=("Helvetica",12))
+        Damping.grid(row=1, column=1,padx=75)
+
+
+        Wet = tk.Label(self, text="Wet", bg="black", fg="white", font=("Helvetica",12))
+        Wet.grid(row=1, column=2,padx=75)
+
+        Dry = tk.Label(self, text="Dry", bg="black", fg="White", font=("Helvetica",12))
+        Dry.grid(row=1, column=3,padx=75)
+
+
+        roomsizeslider = tk.Scale(self, from_=3, to=0,resolution=0.1, length=380, command=roomsizeval,width = 30)
+        roomsizeslider.grid(row=2, column=0)
+
+
+        dampingslider = tk.Scale(self, from_=3, to=0,resolution=0.1, length=380, command=dampingval, width = 30)
+        dampingslider.grid(row=2, column=1)
+
+        wetslider = tk.Scale(self, from_=3, to=-0,resolution=0.1, length=380, command=wetval, width = 30)
+        wetslider.grid(row=2, column=2)
+
+        dryslider = tk.Scale(self, from_=3, to=0, resolution=0.1, length=380, comman=dryval, width = 30)
+        dryslider.grid(row=2, column=3)
+
+
+class Fuzz(tk.Frame):
+
+    def __init__(self, parent, controller):
+        def closewindow ():
+            controller.show_frame("StartPage")
+
+            ## Close Fuzz Puredata program ##
+
+            
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        button = tk.Button(self, text="Go to the Home page",command = lambda:closewindow())
+        button.grid(row=3,columnspan=4)
+
+        Name = tk.Label(self, text="Fuzz", bg="black", fg="white", font=("Helvetica",16))
+        Name.grid(row=0, columnspan=4, padx=400)
+
+
+        
+
+
+if __name__ == "__main__":
+    app = SampleApp()
+    app.title("Multi-effects unit by Bradley Walker 1401579")
+
+    app.geometry("800x480")
+    app.mainloop()
